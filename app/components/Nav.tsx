@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-const Nav = () => {
+const Nav: React.FunctionComponent = () => {
   return (
     <div className="z-10 max-w-5xl items-center justify-between text-sm">
       <div className="fixed w-full left-0 top-0 right-0 flex justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:w-auto lg:border lg:bg-gray-200 lg:dark:bg-zinc-800/30">
@@ -14,9 +14,15 @@ const Nav = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          By <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
-          <p className="flex place-items-end">Contributors: @AnirvanBhaduri</p>
+          Powered By{' '}
+          <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
         </a>
+        <p className="flex p-8">
+          Contributors:{' '}
+          <a target="_blank" className="ml-2" href="https://github.com/anirvanBhaduri">
+            @anirvanBhaduri
+          </a>
+        </p>
       </div>
     </div>
   );
