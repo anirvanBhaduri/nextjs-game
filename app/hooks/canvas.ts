@@ -1,12 +1,26 @@
 import { useRef, useEffect } from 'react';
-import { PhysicsEngine } from '../game/physics-engine';
-import { Rectangle } from '../game/objects/rectangle';
-import { Ball } from '../game/objects/ball';
+import { RenderCommand } from '../game/objects/types';
 
-export type CanvasOptions = {
-  context?: string;
+export type RenderInitMethod = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => void;
+
+export type RenderLifeCycleMethod = (
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  previousRenderFrameTime?: number,
+  currentRenderFrameTime?: number
+) => void;
+
+export type RenderingEngineOptions2d = {
+  init?: RenderInitMethod;
+  beforeRender?: RenderLifeCycleMethod;
+  afterRender?: RenderLifeCycleMethod;
 };
 
+/**
+ * Resize the canvas based on the current window's aspect ratio.
+ *
+ * @param canvas
+ */
 export const resizeCanvas = (canvas: HTMLCanvasElement): undefined => {
   const { width, height } = canvas.getBoundingClientRect();
 
@@ -17,10 +31,31 @@ export const resizeCanvas = (canvas: HTMLCanvasElement): undefined => {
   }
 };
 
-const useCanvas = (renderingObject: Ball) => {
+const use2dRenderingEngine = (renderCommands: RenderCommand[], options?: RenderingEngineOptions2d) => {
   const canvasRef = useRef(null);
 
-  let physicsEngine: PhysicsEngine;
+  let lastRenderTime: number | undefined;
+
+  // we want to make sure we set the last render time to
+  // undefined when moving away from the screen, otherwise
+  // the difference between last and current render time
+  // can become HUGE.
+  useEffect(() => {
+    const visibilityListener = () => {
+      if (document.hidden) {
+        lastRenderTime = undefined;
+      }
+    };
+
+    // Check for browser support
+    if (typeof document.hidden !== 'undefined') {
+      document.addEventListener('visibilitychange', visibilityListener);
+    }
+
+    return () => {
+      document.removeEventListener('visibilitychange', visibilityListener);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement | null;
@@ -29,38 +64,44 @@ const useCanvas = (renderingObject: Ball) => {
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    // TODO: pass this in as an option
     resizeCanvas(canvas);
-
-    // TODO: physics engine will need to be updated if the canvas size changes
-    if (!physicsEngine) {
-      physicsEngine = new PhysicsEngine(new Rectangle(canvas.width, canvas.height));
-    }
+    options?.init?.(canvas, context);
 
     let animationFrameId: number;
-    let lastRenderTime: number;
 
-    const render = (renderTime?: number) => {
-      if (lastRenderTime && renderTime) {
-        // TODO: need to pass an option to do the physics calculation before this step
-        physicsEngine.calculateNextBallPosition(renderingObject, (renderTime - lastRenderTime) / 1000, []);
-      }
+    const render = (currentRenderTime?: number) => {
+      options?.beforeRender?.(canvas, context, lastRenderTime, currentRenderTime);
 
-      if (renderTime) lastRenderTime = renderTime;
-
+      // paint the canvas fully black
       context.fillStyle = '#000000';
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-      renderingObject.draw(context);
+
+      for (let renderCommand of renderCommands) {
+        context.fillStyle = renderCommand.fillStyle;
+
+        for (let drawable of renderCommand.drawables) {
+          drawable.draw(context);
+        }
+
+        if (renderCommand.drawables.length > 0) {
+          context.fill();
+        }
+      }
+
+      options?.afterRender?.(canvas, context, lastRenderTime, currentRenderTime);
+
+      if (currentRenderTime) lastRenderTime = currentRenderTime;
       animationFrameId = window.requestAnimationFrame(render);
     };
 
     render();
+
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [renderingObject.draw]);
+  }, []);
 
   return canvasRef;
 };
 
-export default useCanvas;
+export default use2dRenderingEngine;

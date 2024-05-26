@@ -1,6 +1,6 @@
-import { Vector2d } from './spatial';
+import { WithPos, Vector2d } from './types';
 
-export class Circle {
+export class Circle implements WithPos {
   radius: number;
   pos: Vector2d;
 

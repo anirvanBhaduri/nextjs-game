@@ -1,7 +1,6 @@
-import { Vector2d } from './spatial';
-import { Draw2d } from './types';
+import { WithDraw2d, WithPos, Vector2d, With2dDimensions } from './types';
 
-export class Rectangle implements Draw2d {
+export class Rectangle implements WithDraw2d, WithPos, With2dDimensions {
   width: number;
   height: number;
   pos: Vector2d;

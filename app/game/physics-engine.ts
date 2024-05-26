@@ -1,5 +1,4 @@
-import { Ball } from './objects/ball';
-import { Rectangle } from './objects/rectangle';
+import { With2dDimensions, WithPos, WithSpeed } from './objects/types';
 
 export enum Direction {
   TOP = 1,
@@ -8,16 +7,23 @@ export enum Direction {
   LEFT,
 }
 
-export class PhysicsEngine {
-  private gameBoundary: Rectangle;
+type Collidable = With2dDimensions & WithPos;
+type PartialBall = Collidable & WithSpeed;
 
-  public constructor(gameBoundary: Rectangle) {
+export class PhysicsEngine {
+  private gameBoundary: Collidable;
+
+  public constructor(gameBoundary: Collidable) {
     this.gameBoundary = gameBoundary;
+  }
+
+  public getGameBoundary() {
+    return this.gameBoundary;
   }
 
   // use the ball object and a time differential to determine the position
   // timeDiff should be in seconds
-  public calculateNextBallPosition(ball: Ball, timeDiff: number, possibleCollisionObjects: Rectangle[]) {
+  public calculateNextBallPosition(ball: PartialBall, timeDiff: number, possibleCollisionObjects: Collidable[]) {
     // simple matrix multiplication with scalar value
     ball.pos.x += ball.speed.x * timeDiff;
     ball.pos.y += ball.speed.y * timeDiff;
@@ -55,7 +61,7 @@ export class PhysicsEngine {
    * return an array of directions where the collisions occur.
    * Empty if no collisions occur with the boundary
    */
-  public getBoundaryCollisions(subject: Rectangle): Direction[] {
+  public getBoundaryCollisions(subject: Collidable): Direction[] {
     const boundaryLeft = this.gameBoundary.pos.x;
     const boundaryRight = this.gameBoundary.pos.x + this.gameBoundary.width;
     const boundaryTop = this.gameBoundary.pos.y;
@@ -82,13 +88,13 @@ export class PhysicsEngine {
   }
 
   /**
-   * Check if one rectangle collides with the other
+   * Check if one object collides with the other
    *
    * @param rectA
    * @param rectB
    * @returns boolean | true if they collide, false otherwise
    */
-  public doesOneCollideWithTheOther(rectA: Rectangle, rectB: Rectangle): boolean {
+  public doesOneCollideWithTheOther(rectA: Collidable, rectB: Collidable): boolean {
     // first define the boundaries of both rectangles
     const leftA = rectA.pos.x;
     const rightA = rectA.pos.x + rectA.width;
@@ -124,7 +130,7 @@ export class PhysicsEngine {
    *
    * @return an array of rectangles the subject collides with. Empty if none
    */
-  public doTheyCollide(subject: Rectangle, checkAgainst: Rectangle[]) {
+  public doTheyCollide(subject: Collidable, checkAgainst: Collidable[]) {
     return checkAgainst.filter((rect) => this.doesOneCollideWithTheOther(subject, rect));
   }
 }

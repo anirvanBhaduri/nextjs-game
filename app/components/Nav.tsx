@@ -15,7 +15,14 @@ const Nav: React.FunctionComponent = () => {
           rel="noopener noreferrer"
         >
           Powered By{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
+          <Image
+            src="/vercel.svg"
+            alt="Vercel Logo"
+            className="dark:invert w-[100px] h-auto"
+            width={0}
+            height={0}
+            priority
+          />
         </a>
         <p className="flex p-8">
           Contributors:{' '}
