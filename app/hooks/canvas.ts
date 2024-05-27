@@ -37,8 +37,7 @@ export const resizeCanvas = (canvas: HTMLCanvasElement): undefined => {
 
 const use2dRenderingEngine = (renderCommands: RenderCommand, options?: RenderingEngineOptions2d) => {
   const canvasRef = useRef(null);
-
-  let lastRenderTime: number | undefined;
+  const lastRenderTime = useRef<number | undefined>(undefined);
 
   // we want to make sure we set the last render time to
   // undefined when moving away from the screen, otherwise
@@ -47,7 +46,7 @@ const use2dRenderingEngine = (renderCommands: RenderCommand, options?: Rendering
   useEffect(() => {
     const visibilityListener = () => {
       if (document.hidden) {
-        lastRenderTime = undefined;
+        lastRenderTime.current = undefined;
       }
     };
 
@@ -74,15 +73,15 @@ const use2dRenderingEngine = (renderCommands: RenderCommand, options?: Rendering
     let animationFrameId: number;
 
     const render = (currentRenderTime?: number) => {
-      options?.beforeRender?.(canvas, context, lastRenderTime, currentRenderTime);
+      options?.beforeRender?.(canvas, context, lastRenderTime.current, currentRenderTime);
 
       for (let drawable of renderCommands.drawables) {
         drawable.draw(context);
       }
 
-      options?.afterRender?.(canvas, context, lastRenderTime, currentRenderTime);
+      options?.afterRender?.(canvas, context, lastRenderTime.current, currentRenderTime);
 
-      if (currentRenderTime) lastRenderTime = currentRenderTime;
+      if (currentRenderTime) lastRenderTime.current = currentRenderTime;
       animationFrameId = window.requestAnimationFrame(render);
     };
 
@@ -92,7 +91,7 @@ const use2dRenderingEngine = (renderCommands: RenderCommand, options?: Rendering
       window.cancelAnimationFrame(animationFrameId);
       options?.onDestroy?.();
     };
-  }, []);
+  }, [renderCommands.drawables, options]);
 
   return canvasRef;
 };
