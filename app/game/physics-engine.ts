@@ -9,6 +9,7 @@ export enum Direction {
 
 type Collidable = With2dDimensions & WithPos;
 type PartialBall = Collidable & WithSpeed;
+type PartialPlayer = Collidable & WithSpeed;
 
 export class PhysicsEngine {
   private gameBoundary: Collidable;
@@ -21,22 +22,8 @@ export class PhysicsEngine {
     return this.gameBoundary;
   }
 
-  // use the ball object and a time differential to determine the position
-  // timeDiff should be in seconds
-  public calculateNextBallPosition(ball: PartialBall, timeDiff: number, possibleCollisionObjects: Collidable[]) {
-    // simple matrix multiplication with scalar value
-    ball.pos.x += ball.speed.x * timeDiff;
-    ball.pos.y += ball.speed.y * timeDiff;
-
-    // now we check if the new position is colliding with any of the objects provided
-    // TODO: we'll take care of how we deal with collisions with objects shortly
-    // const colliders = this.doTheyCollide(ball, possibleCollisionObjects);
-
-    // if (colliders.length > 0) {
-    // return;
-    // }
-
-    const gameBoundaryCollisions = this.getBoundaryCollisions(ball);
+  public calculateNextPlayerPosition(player: PartialPlayer) {
+    const gameBoundaryCollisions = this.getBoundaryCollisions(player);
 
     // no boundary collisions, so all good to go
     if (gameBoundaryCollisions.length === 0) {
@@ -44,6 +31,33 @@ export class PhysicsEngine {
     }
 
     for (let collision of gameBoundaryCollisions) {
+      if (collision === Direction.TOP) {
+        player.pos.y = this.gameBoundary.pos.y;
+      }
+
+      if (collision === Direction.BOTTOM) {
+        player.pos.y = this.gameBoundary.pos.y + this.gameBoundary.height - player.height;
+      }
+    }
+  }
+
+  // use the ball object and a time differential to determine the position
+  // timeDiff should be in seconds
+  public calculateNextBallPosition(ball: PartialBall, timeDiff: number, possibleCollisionObjects: Collidable[]) {
+    // simple matrix multiplication with scalar value
+    ball.pos.x += ball.speed.x * timeDiff;
+    ball.pos.y += ball.speed.y * timeDiff;
+
+    const collisionDirections = this.doTheyCollide(ball, possibleCollisionObjects);
+    const gameBoundaryCollisions = this.getBoundaryCollisions(ball);
+    const allCollisions = [...collisionDirections, ...gameBoundaryCollisions];
+
+    // no boundary collisions, so all good to go
+    if (allCollisions.length === 0) {
+      return;
+    }
+
+    for (let collision of allCollisions) {
       if ((collision === Direction.TOP && ball.speed.y < 0) || (collision === Direction.BOTTOM && ball.speed.y > 0)) {
         ball.speed.y = -ball.speed.y;
       }
@@ -92,9 +106,10 @@ export class PhysicsEngine {
    *
    * @param rectA
    * @param rectB
-   * @returns boolean | true if they collide, false otherwise
+   * @returns Direction relative to rectA. So if rectA collides with rectB, it'll say the Direction
+   * rectA is colliding with rectB. The inverse direction would be true for rectB.
    */
-  public doesOneCollideWithTheOther(rectA: Collidable, rectB: Collidable): boolean {
+  public doesOneCollideWithTheOther(rectA: Collidable, rectB: Collidable): Direction[] {
     // first define the boundaries of both rectangles
     const leftA = rectA.pos.x;
     const rightA = rectA.pos.x + rectA.width;
@@ -106,31 +121,48 @@ export class PhysicsEngine {
     const topB = rectB.pos.y;
     const bottomB = rectB.pos.y + rectB.height;
 
-    if (leftA > rightB) {
-      return false;
+    let collisionDirections: Direction[] = [];
+
+    // check if they even collide at all
+    if (leftA > rightB || topA > bottomB || rightA < leftB || bottomA < topB) {
+      return collisionDirections;
     }
 
-    if (topA > bottomB) {
-      return false;
+    if (leftA < rightB) {
+      collisionDirections.push(Direction.LEFT);
     }
 
-    if (rightA < leftB) {
-      return false;
+    if (topA < bottomB) {
+      collisionDirections.push(Direction.TOP);
     }
 
-    if (bottomA < topB) {
-      return false;
+    if (rightA > leftB) {
+      collisionDirections.push(Direction.RIGHT);
     }
 
-    return true;
+    if (bottomA > topB) {
+      collisionDirections.push(Direction.BOTTOM);
+    }
+
+    return collisionDirections;
   }
 
   /**
    * Check if one game object collides with multiple others
    *
-   * @return an array of rectangles the subject collides with. Empty if none
+   * @return an array of Directions where the subject collides with others. Empty if none
    */
-  public doTheyCollide(subject: Collidable, checkAgainst: Collidable[]) {
-    return checkAgainst.filter((rect) => this.doesOneCollideWithTheOther(subject, rect));
+  public doTheyCollide(subject: Collidable, checkAgainst: Collidable[]): Direction[] {
+    return checkAgainst.reduce<Direction[]>((collisions, collidable) => {
+      const collisionDirections = this.doesOneCollideWithTheOther(subject, collidable);
+
+      for (let direction of collisionDirections) {
+        if (!collisions.includes(direction)) {
+          collisions.push(direction);
+        }
+      }
+
+      return collisions;
+    }, []);
   }
 }

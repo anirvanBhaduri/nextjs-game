@@ -1,10 +1,18 @@
-export class Vector2d {
+export class Vector2d implements WithPreviousXY {
   public x: number;
   public y: number;
+  public previousX: number;
+  public previousY: number;
 
   public constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
+    this.previousX = x;
+    this.previousY = y;
+  }
+
+  public hasChanged() {
+    return this.x !== this.previousX || this.y !== this.previousY;
   }
 }
 
@@ -16,9 +24,25 @@ export type WithPos = {
   pos: Vector2d;
 };
 
+export type WithPreviousXY = {
+  previousX: number;
+  previousY: number;
+  hasChanged: () => boolean;
+};
+
 export type With2dDimensions = {
   height: number;
   width: number;
+};
+
+export type WithDirectionKeys = {
+  upKey?: string;
+  upKeyListener: (event: KeyboardEvent) => void;
+  setUpKey: (key: string) => void;
+
+  downKey?: string;
+  downKeyListener: (event: KeyboardEvent) => void;
+  setDownKey: (key: string) => void;
 };
 
 export type WithSpeed = {
@@ -26,6 +50,5 @@ export type WithSpeed = {
 };
 
 export type RenderCommand = {
-  fillStyle: string;
   drawables: WithDraw2d[];
 };

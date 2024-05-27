@@ -14,7 +14,15 @@ export class Ball extends Rectangle implements WithSpeed {
   }
 
   public draw(context: CanvasRenderingContext2D) {
+    // the ball is leaving a weird trace behind, so we clear very slightly larger
+    // than the area the ball takes
+    context.clearRect(this.pos.previousX - 1, this.pos.previousY - 1, this.width + 2, this.height + 2);
+
+    this.pos.previousX = this.pos.x;
+    this.pos.previousY = this.pos.y;
+
     context.beginPath();
+    context.fillStyle = '#ffffff';
 
     // arc angles in radians
     context.arc(
@@ -24,5 +32,8 @@ export class Ball extends Rectangle implements WithSpeed {
       0,
       2 * Math.PI
     );
+
+    context.closePath();
+    context.fill();
   }
 }

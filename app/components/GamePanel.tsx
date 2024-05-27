@@ -6,12 +6,14 @@ import { RenderInitMethod, RenderLifeCycleMethod } from '../hooks/canvas';
 import { GameEngine } from '../game/game-engine';
 import { PhysicsEngine } from '../game/physics-engine';
 import { Rectangle } from '../game/objects/rectangle';
+import { Vector2d } from '../game/objects/types';
 
 export interface GamePanelProps {}
 
 type GameArtifacts = {
   gameInit: RenderInitMethod;
   gameBeforeRender: RenderLifeCycleMethod;
+  gameOnDestroy: () => void;
   gameEngine: GameEngine;
 };
 
@@ -24,6 +26,7 @@ const setupGame = (): GameArtifacts => {
 
       // now setup the game objects
       gameEngine.addBall();
+      gameEngine.addPlayer('w', 's', new Vector2d(20, canvas.height / 2));
 
       // finally start the game
       gameEngine.start();
@@ -36,24 +39,25 @@ const setupGame = (): GameArtifacts => {
     }
   };
 
+  const gameOnDestroy = () => {
+    gameEngine.destroy();
+  };
+
   // we will also create a game after render too, where we can perform some game
   // related logic, like cleaning up some objects, WIN/LOSS etc.
 
   return {
     gameInit,
     gameBeforeRender,
+    gameOnDestroy,
     gameEngine,
   };
 };
 
-let gameArtifacts: GameArtifacts;
-
 const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
-  if (!gameArtifacts) {
-    gameArtifacts = setupGame();
-  }
+  const gameArtifacts = setupGame();
 
-  const canvasRef = use2dRenderingEngine(gameArtifacts.gameEngine.getRenderCommands(), {
+  const canvasRef = use2dRenderingEngine(gameArtifacts.gameEngine.getRenderCommand(), {
     init: gameArtifacts.gameInit,
     beforeRender: gameArtifacts.gameBeforeRender,
   });
@@ -61,7 +65,7 @@ const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
   return (
     <div className="h-fit w-full rounded-lg bg-gray-700 flex flex-col gap-2 p-4">
       <h2>GamePanel</h2>
-      <canvas className="h-[350px] w-full" ref={canvasRef} />
+      <canvas className="h-[350px] w-full bg-black" ref={canvasRef} />
     </div>
   );
 };

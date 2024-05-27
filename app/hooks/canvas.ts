@@ -14,6 +14,7 @@ export type RenderingEngineOptions2d = {
   init?: RenderInitMethod;
   beforeRender?: RenderLifeCycleMethod;
   afterRender?: RenderLifeCycleMethod;
+  onDestroy?: () => void;
 };
 
 /**
@@ -24,14 +25,17 @@ export type RenderingEngineOptions2d = {
 export const resizeCanvas = (canvas: HTMLCanvasElement): undefined => {
   const { width, height } = canvas.getBoundingClientRect();
 
-  if (canvas.width !== width || canvas.height !== height) {
-    const { devicePixelRatio: ratio = 1 } = window;
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
+  // TODO: consider use of CSS transform to scale canvas
+  if (canvas.width === width && canvas.height === height) {
+    return;
   }
+
+  const { devicePixelRatio: ratio = 1 } = window;
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
 };
 
-const use2dRenderingEngine = (renderCommands: RenderCommand[], options?: RenderingEngineOptions2d) => {
+const use2dRenderingEngine = (renderCommands: RenderCommand, options?: RenderingEngineOptions2d) => {
   const canvasRef = useRef(null);
 
   let lastRenderTime: number | undefined;
@@ -61,7 +65,7 @@ const use2dRenderingEngine = (renderCommands: RenderCommand[], options?: Renderi
     const canvas = canvasRef.current as HTMLCanvasElement | null;
     if (!canvas) return;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d', { alpha: false });
     if (!context) return;
 
     resizeCanvas(canvas);
@@ -72,20 +76,8 @@ const use2dRenderingEngine = (renderCommands: RenderCommand[], options?: Renderi
     const render = (currentRenderTime?: number) => {
       options?.beforeRender?.(canvas, context, lastRenderTime, currentRenderTime);
 
-      // paint the canvas fully black
-      context.fillStyle = '#000000';
-      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-      for (let renderCommand of renderCommands) {
-        context.fillStyle = renderCommand.fillStyle;
-
-        for (let drawable of renderCommand.drawables) {
-          drawable.draw(context);
-        }
-
-        if (renderCommand.drawables.length > 0) {
-          context.fill();
-        }
+      for (let drawable of renderCommands.drawables) {
+        drawable.draw(context);
       }
 
       options?.afterRender?.(canvas, context, lastRenderTime, currentRenderTime);
@@ -98,6 +90,7 @@ const use2dRenderingEngine = (renderCommands: RenderCommand[], options?: Renderi
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
+      options?.onDestroy?.();
     };
   }, []);
 
