@@ -26,7 +26,8 @@ const setupGame = (): GameArtifacts => {
 
       // now setup the game objects
       gameEngine.addBall();
-      gameEngine.addPlayer('w', 's', new Vector2d(20, canvas.height / 2));
+      gameEngine.addPlayer('w', 's', new Vector2d(30, canvas.height / 2));
+      gameEngine.addPlayer('i', 'k', new Vector2d(canvas.width - 30, canvas.height / 2));
 
       // finally start the game
       gameEngine.start();

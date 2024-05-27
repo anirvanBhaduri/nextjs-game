@@ -47,12 +47,9 @@ export type With2dDimensions = {
 
 export type WithDirectionKeys = {
   upKey?: string;
-  upKeyListener: (event: KeyboardEvent) => void;
-  setUpKey: (key: string) => void;
-
+  upKeyPressed: boolean;
   downKey?: string;
-  downKeyListener: (event: KeyboardEvent) => void;
-  setDownKey: (key: string) => void;
+  downKeyPressed: boolean;
 };
 
 export type WithSpeed = {

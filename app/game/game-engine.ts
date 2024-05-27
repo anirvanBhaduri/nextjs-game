@@ -17,7 +17,6 @@ export class NoPhysicsEngine extends Error {}
 export class GameEngine {
   private gameState: GameState;
   private _physicsEngine: PhysicsEngine | undefined = undefined;
-  private gameObjects: GameObject[];
   private balls: Ball[];
   private players: Paddle[] = [];
   private renderCommand: RenderCommand = {
@@ -27,7 +26,6 @@ export class GameEngine {
   public constructor() {
     this.gameState = GameState.INIT;
     this.balls = [];
-    this.gameObjects = [];
   }
 
   set physicsEngine(physicsEngine: PhysicsEngine) {
@@ -40,6 +38,8 @@ export class GameEngine {
 
   public start() {
     this.gameState = GameState.PLAY;
+    document.addEventListener('keydown', this.keyDownListener.bind(this));
+    document.addEventListener('keyup', this.keyUpListener.bind(this));
   }
 
   public pause() {
@@ -81,7 +81,6 @@ export class GameEngine {
       )
     );
     this.balls.push(newBall);
-    this.gameObjects.push(newBall);
     this.renderCommand.drawables.push(newBall);
   }
 
@@ -99,17 +98,55 @@ export class GameEngine {
     }
 
     // long but thin paddle
-    const paddleHeight = 150;
-    startPos.y -= Math.floor(paddleHeight / 2);
-    const newPlayer = new Paddle(20, paddleHeight, startPos, new Vector2d(0, 30));
+    const paddleDimensions = new Vector2d(20, 150);
+    startPos.y -= Math.floor(paddleDimensions.y / 2);
+    startPos.x -= Math.floor(paddleDimensions.x / 2);
+    const newPlayer = new Paddle(paddleDimensions.x, paddleDimensions.y, startPos);
     this.players.push(newPlayer);
-    this.gameObjects.push(newPlayer);
     this.renderCommand.drawables.push(newPlayer);
 
     newPlayer.setUpKey(upKey);
     newPlayer.setDownKey(downKey);
-    document.addEventListener('keydown', newPlayer.upKeyListener.bind(newPlayer));
-    document.addEventListener('keydown', newPlayer.downKeyListener.bind(newPlayer));
+  }
+
+  public keyUpListener(event: KeyboardEvent) {
+    for (let player of this.players) {
+      if (event.key !== player.upKey && event.key !== player.downKey) {
+        continue;
+      }
+
+      if (event.isComposing) {
+        return;
+      }
+      event.preventDefault();
+
+      if (event.key === player.upKey) {
+        player.upKeyPressed = false;
+      } else {
+        player.downKeyPressed = false;
+      }
+      return;
+    }
+  }
+
+  public keyDownListener(event: KeyboardEvent) {
+    for (let player of this.players) {
+      if (event.key !== player.upKey && event.key !== player.downKey) {
+        continue;
+      }
+
+      if (event.isComposing) {
+        return;
+      }
+      event.preventDefault();
+
+      if (event.key === player.upKey) {
+        player.upKeyPressed = true;
+      } else {
+        player.downKeyPressed = true;
+      }
+      return;
+    }
   }
 
   /**
@@ -139,9 +176,7 @@ export class GameEngine {
 
   public destroy() {
     // destroy event listeners here
-    this.players.forEach((player) => {
-      document.removeEventListener('keydown', player.upKeyListener);
-      document.removeEventListener('keydown', player.downKeyListener);
-    });
+    document.removeEventListener('keydown', this.keyDownListener);
+    document.removeEventListener('keyup', this.keyUpListener);
   }
 }

@@ -1,4 +1,4 @@
-import { With2dDimensions, WithPos, WithSpeed } from './objects/types';
+import { With2dDimensions, WithDirectionKeys, WithPos, WithSpeed } from './objects/types';
 
 export enum Direction {
   TOP = 1,
@@ -9,7 +9,7 @@ export enum Direction {
 
 type Collidable = With2dDimensions & WithPos;
 type PartialBall = Collidable & WithSpeed;
-type PartialPlayer = Collidable & WithSpeed;
+type PartialPlayer = Collidable & WithSpeed & WithDirectionKeys;
 
 export class PhysicsEngine {
   private gameBoundary: Collidable;
@@ -23,6 +23,12 @@ export class PhysicsEngine {
   }
 
   public calculateNextPlayerPosition(player: PartialPlayer) {
+    if (player.upKeyPressed) {
+      player.pos.y -= player.speed.y;
+    } else if (player.downKeyPressed) {
+      player.pos.y += player.speed.y;
+    }
+
     const gameBoundaryCollisions = this.getBoundaryCollisions(player);
 
     // no boundary collisions, so all good to go
