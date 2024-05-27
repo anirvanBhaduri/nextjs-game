@@ -33,6 +33,16 @@ export type WithPreviousXY = {
 export type With2dDimensions = {
   height: number;
   width: number;
+
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+
+  previousLeft: number;
+  previousTop: number;
+  previousRight: number;
+  previousBottom: number;
 };
 
 export type WithDirectionKeys = {

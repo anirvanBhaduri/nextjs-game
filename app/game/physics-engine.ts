@@ -32,11 +32,11 @@ export class PhysicsEngine {
 
     for (let collision of gameBoundaryCollisions) {
       if (collision === Direction.TOP) {
-        player.pos.y = this.gameBoundary.pos.y;
+        player.pos.y = this.gameBoundary.top;
       }
 
       if (collision === Direction.BOTTOM) {
-        player.pos.y = this.gameBoundary.pos.y + this.gameBoundary.height - player.height;
+        player.pos.y = this.gameBoundary.bottom - player.height;
       }
     }
   }
@@ -76,10 +76,10 @@ export class PhysicsEngine {
    * Empty if no collisions occur with the boundary
    */
   public getBoundaryCollisions(subject: Collidable): Direction[] {
-    const boundaryLeft = this.gameBoundary.pos.x;
-    const boundaryRight = this.gameBoundary.pos.x + this.gameBoundary.width;
-    const boundaryTop = this.gameBoundary.pos.y;
-    const boundaryBottom = this.gameBoundary.pos.y + this.gameBoundary.height;
+    const boundaryLeft = this.gameBoundary.left;
+    const boundaryRight = this.gameBoundary.right;
+    const boundaryTop = this.gameBoundary.top;
+    const boundaryBottom = this.gameBoundary.bottom;
     const collisions = [];
 
     if (subject.pos.x < boundaryLeft) {
@@ -110,37 +110,27 @@ export class PhysicsEngine {
    * rectA is colliding with rectB. The inverse direction would be true for rectB.
    */
   public doesOneCollideWithTheOther(rectA: Collidable, rectB: Collidable): Direction[] {
-    // first define the boundaries of both rectangles
-    const leftA = rectA.pos.x;
-    const rightA = rectA.pos.x + rectA.width;
-    const topA = rectA.pos.y;
-    const bottomA = rectA.pos.y + rectA.height;
-
-    const leftB = rectB.pos.x;
-    const rightB = rectB.pos.x + rectB.width;
-    const topB = rectB.pos.y;
-    const bottomB = rectB.pos.y + rectB.height;
-
     let collisionDirections: Direction[] = [];
 
     // check if they even collide at all
-    if (leftA > rightB || topA > bottomB || rightA < leftB || bottomA < topB) {
+    if (rectA.left > rectB.right || rectA.top > rectB.bottom || rectA.right < rectB.left || rectA.bottom < rectB.top) {
       return collisionDirections;
     }
 
-    if (leftA < rightB) {
+    // check the collision direction
+    if (rectA.left < rectB.right && rectA.previousLeft >= rectB.right) {
       collisionDirections.push(Direction.LEFT);
     }
 
-    if (topA < bottomB) {
+    if (rectA.top < rectB.bottom && rectA.previousTop >= rectB.bottom) {
       collisionDirections.push(Direction.TOP);
     }
 
-    if (rightA > leftB) {
+    if (rectA.right > rectB.left && rectA.previousRight <= rectB.left) {
       collisionDirections.push(Direction.RIGHT);
     }
 
-    if (bottomA > topB) {
+    if (rectA.bottom > rectB.top && rectA.previousBottom <= rectB.top) {
       collisionDirections.push(Direction.BOTTOM);
     }
 
