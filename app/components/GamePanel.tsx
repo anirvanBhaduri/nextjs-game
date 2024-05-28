@@ -64,11 +64,11 @@ const setupGame = (logger: Logger): GameArtifacts => {
  */
 const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
   const { setGameLogs } = useContext(GameLogContext);
-  const gameArtifacts = useRef(setupGame(new GameLogger([], setGameLogs)));
+  const gameArtifacts = useRef(setupGame(new GameLogger([], setGameLogs))).current;
 
-  const canvasRef = use2dRenderingEngine(gameArtifacts.current.gameEngine.getRenderCommand(), {
-    init: gameArtifacts.current.gameInit,
-    beforeRender: gameArtifacts.current.gameBeforeRender,
+  const canvasRef = use2dRenderingEngine(gameArtifacts.gameEngine.getRenderCommand(), {
+    init: gameArtifacts.gameInit,
+    beforeRender: gameArtifacts.gameBeforeRender,
   });
 
   return (
@@ -76,7 +76,7 @@ const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
       <h2 className="text-sm">GamePanel</h2>
       <canvas className="h-[350px] w-full bg-black rounded-md" ref={canvasRef} />
       <div className="z-1 absolute top-20 left-0 right-0 mx-auto w-24">
-        {gameArtifacts.current.gameEngine.isPaused() ? <div className="text-center font-bold">Paused</div> : ''}
+        {gameArtifacts.gameEngine.isPaused() && <div className="text-center font-bold">Paused</div>}
       </div>
     </div>
   );
