@@ -29,11 +29,11 @@ const LogPanel: React.FunctionComponent = () => {
 
   return (
     <div className="h-fit w-full rounded-lg bg-blue-800 flex flex-col gap-2 p-4">
-      <h2>LogPanel</h2>
-      <ul ref={logsRef} className="h-[350px] bg-black overflow-auto w-full rounded-md">
+      <h2 className="text-sm">LogPanel</h2>
+      <ul ref={logsRef} className="h-[350px] bg-black overflow-auto w-full rounded-md scroll-smooth">
         {gameLogs.map((logLine) => {
           return (
-            <li key={logLine.id} className={`w-full px-1 flex align-left ${logLevelToColour[logLine.level]}`}>
+            <li key={logLine.id} className={`w-full px-1 flex align-left text-sm ${logLevelToColour[logLine.level]}`}>
               [{logLine.level}] {logLine.msg}
             </li>
           );

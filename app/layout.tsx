@@ -19,8 +19,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="w-full min-h-screen p-24 pb-32">
-          <Nav />
           {children}
+          <Nav />
         </div>
       </body>
     </html>

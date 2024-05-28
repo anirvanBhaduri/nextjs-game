@@ -55,13 +55,13 @@ export class GameEngine implements WithLogger, WithGameState {
 
   public pause() {
     this.gameState = GameState.PAUSED;
-    this.logger.warn('Game paused');
+    this.logger.info('Game paused');
   }
 
   public resume() {
     if (this.isPaused()) {
       this.gameState = GameState.PLAY;
-      this.logger.warn('Game resumed');
+      this.logger.info('Game resumed');
     }
   }
 
@@ -134,6 +134,7 @@ export class GameEngine implements WithLogger, WithGameState {
       } else {
         this.resume();
       }
+      event.preventDefault();
       return;
     }
 
