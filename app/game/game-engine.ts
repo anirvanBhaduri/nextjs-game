@@ -48,19 +48,19 @@ export class GameEngine implements WithLogger {
 
   public pause() {
     this.gameState = GameState.PAUSED;
-    this.logger.info('Game paused');
+    this.logger.warn('Game paused');
   }
 
   public resume() {
     if (this.gameState === GameState.PAUSED) {
       this.gameState = GameState.PLAY;
-      this.logger.info('Game resumed');
+      this.logger.warn('Game resumed');
     }
   }
 
   public stop() {
     this.gameState = GameState.END;
-    this.logger.info('Game stopped');
+    this.logger.error('Game stopped');
   }
 
   public addBall() {
@@ -117,14 +117,24 @@ export class GameEngine implements WithLogger {
   }
 
   public keyUpListener(event: KeyboardEvent) {
+    if (event.isComposing) {
+      return;
+    }
+
+    if (event.code === 'Space') {
+      if (this.gameState === GameState.PLAY) {
+        this.pause();
+      } else {
+        this.resume();
+      }
+      return;
+    }
+
     for (let player of this.players) {
       if (event.key !== player.upKey && event.key !== player.downKey) {
         continue;
       }
 
-      if (event.isComposing) {
-        return;
-      }
       event.preventDefault();
 
       if (event.key === player.upKey) {
