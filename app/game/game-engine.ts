@@ -11,13 +11,16 @@ export enum GameState {
   END,
 }
 
+export type WithGameState = {
+  gameState: GameState;
+  isPaused: () => boolean;
+};
 export type GameObject = WithPos & With2dDimensions & WithDraw2d;
-
 export class NoPhysicsEngine extends Error {}
 
-export class GameEngine implements WithLogger {
+export class GameEngine implements WithLogger, WithGameState {
   logger: Logger;
-  private gameState: GameState;
+  gameState: GameState;
   private _physicsEngine: PhysicsEngine | undefined = undefined;
   private balls: Ball[];
   private players: Player[] = [];
@@ -46,13 +49,17 @@ export class GameEngine implements WithLogger {
     this.logger.info('Game started');
   }
 
+  public isPaused() {
+    return this.gameState === GameState.PAUSED;
+  }
+
   public pause() {
     this.gameState = GameState.PAUSED;
     this.logger.warn('Game paused');
   }
 
   public resume() {
-    if (this.gameState === GameState.PAUSED) {
+    if (this.isPaused()) {
       this.gameState = GameState.PLAY;
       this.logger.warn('Game resumed');
     }

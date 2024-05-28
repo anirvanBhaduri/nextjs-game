@@ -56,6 +56,12 @@ const setupGame = (logger: Logger): GameArtifacts => {
   };
 };
 
+/**
+ * Game doesn't yet support game screen resizing. One will need to refresh
+ * the page after resizing the screen.
+ *
+ * @returns
+ */
 const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
   const { setGameLogs } = useContext(GameLogContext);
   const gameArtifacts = useRef(setupGame(new GameLogger([], setGameLogs)));
@@ -66,9 +72,12 @@ const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
   });
 
   return (
-    <div className="h-fit w-full rounded-lg bg-gray-700 flex flex-col gap-2 p-4">
+    <div className="h-fit relative w-full rounded-lg bg-gray-700 flex flex-col gap-2 p-4">
       <h2>GamePanel</h2>
       <canvas className="h-[350px] w-full bg-black rounded-md" ref={canvasRef} />
+      <div className="z-1 absolute top-20 left-0 right-0 mx-auto w-24">
+        {gameArtifacts.current.gameEngine.isPaused() ? <div className="text-center font-bold">Paused</div> : ''}
+      </div>
     </div>
   );
 };

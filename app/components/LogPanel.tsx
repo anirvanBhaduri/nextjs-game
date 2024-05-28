@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { LogLevel, GameLogContext } from '../game/game-logger';
 
 const logLevelToColour: {
@@ -19,11 +19,18 @@ const logLevelToColour: {
  */
 const LogPanel: React.FunctionComponent = () => {
   const { gameLogs } = useContext(GameLogContext);
+  const logsRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (logsRef?.current) {
+      logsRef.current.scrollTop = logsRef.current.scrollHeight;
+    }
+  }, [gameLogs]);
 
   return (
     <div className="h-fit w-full rounded-lg bg-blue-800 flex flex-col gap-2 p-4">
       <h2>LogPanel</h2>
-      <ul className="h-[350px] bg-black overflow-auto w-full rounded-md">
+      <ul ref={logsRef} className="h-[350px] bg-black overflow-auto w-full rounded-md">
         {gameLogs.map((logLine) => {
           return (
             <li key={logLine.id} className={`w-full px-1 flex align-left ${logLevelToColour[logLine.level]}`}>
