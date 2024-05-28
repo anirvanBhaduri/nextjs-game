@@ -45,6 +45,10 @@ export type With2dDimensions = {
   previousBottom: number;
 };
 
+export type WithName = {
+  name: string;
+};
+
 export type WithDirectionKeys = {
   upKey?: string;
   upKeyPressed: boolean;

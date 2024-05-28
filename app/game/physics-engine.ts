@@ -1,3 +1,4 @@
+import { GameLogger, Logger, WithLogger } from './game-logger';
 import { With2dDimensions, WithDirectionKeys, WithPos, WithSpeed } from './objects/types';
 
 export enum Direction {
@@ -11,11 +12,13 @@ type Collidable = With2dDimensions & WithPos;
 type PartialBall = Collidable & WithSpeed;
 type PartialPlayer = Collidable & WithSpeed & WithDirectionKeys;
 
-export class PhysicsEngine {
+export class PhysicsEngine implements WithLogger {
+  public logger: Logger;
   private gameBoundary: Collidable;
 
-  public constructor(gameBoundary: Collidable) {
+  public constructor(gameBoundary: Collidable, logger: Logger = new GameLogger()) {
     this.gameBoundary = gameBoundary;
+    this.logger = logger;
   }
 
   public getGameBoundary() {
@@ -90,6 +93,7 @@ export class PhysicsEngine {
 
     if (subject.pos.x < boundaryLeft) {
       collisions.push(Direction.LEFT);
+      this.logger.warn('Ouch!');
     }
 
     if (subject.pos.y < boundaryTop) {
@@ -98,6 +102,7 @@ export class PhysicsEngine {
 
     if (subject.pos.x + subject.width > boundaryRight) {
       collisions.push(Direction.RIGHT);
+      this.logger.warn('Ouch!');
     }
 
     if (subject.pos.y + subject.height > boundaryBottom) {

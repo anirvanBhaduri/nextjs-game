@@ -1,5 +1,6 @@
+import { GameLogger, Logger, WithLogger } from './game-logger';
 import { Ball } from './objects/ball';
-import { Paddle } from './objects/paddle';
+import { Player } from './objects/player';
 import { RenderCommand, Vector2d, WithDraw2d, With2dDimensions, WithPos } from './objects/types';
 import { PhysicsEngine } from './physics-engine';
 
@@ -14,18 +15,20 @@ export type GameObject = WithPos & With2dDimensions & WithDraw2d;
 
 export class NoPhysicsEngine extends Error {}
 
-export class GameEngine {
+export class GameEngine implements WithLogger {
+  logger: Logger;
   private gameState: GameState;
   private _physicsEngine: PhysicsEngine | undefined = undefined;
   private balls: Ball[];
-  private players: Paddle[] = [];
+  private players: Player[] = [];
   private renderCommand: RenderCommand = {
     drawables: [],
   };
 
-  public constructor() {
+  public constructor(logger: Logger = new GameLogger()) {
     this.gameState = GameState.INIT;
     this.balls = [];
+    this.logger = logger;
   }
 
   set physicsEngine(physicsEngine: PhysicsEngine) {
@@ -37,23 +40,27 @@ export class GameEngine {
   }
 
   public start() {
-    this.gameState = GameState.PLAY;
     document.addEventListener('keydown', this.keyDownListener.bind(this));
     document.addEventListener('keyup', this.keyUpListener.bind(this));
+    this.gameState = GameState.PLAY;
+    this.logger.info('Game started');
   }
 
   public pause() {
     this.gameState = GameState.PAUSED;
+    this.logger.info('Game paused');
   }
 
   public resume() {
     if (this.gameState === GameState.PAUSED) {
       this.gameState = GameState.PLAY;
+      this.logger.info('Game resumed');
     }
   }
 
   public stop() {
     this.gameState = GameState.END;
+    this.logger.info('Game stopped');
   }
 
   public addBall() {
@@ -92,16 +99,16 @@ export class GameEngine {
    * @param upKey
    * @param downKey
    */
-  public addPlayer(upKey: string, downKey: string, startPos: Vector2d) {
+  public addPlayer(upKey: string, downKey: string, startPos: Vector2d, name: string) {
     if (!this._physicsEngine) {
       throw new NoPhysicsEngine();
     }
 
-    // long but thin paddle
-    const paddleDimensions = new Vector2d(20, 150);
-    startPos.y -= Math.floor(paddleDimensions.y / 2);
-    startPos.x -= Math.floor(paddleDimensions.x / 2);
-    const newPlayer = new Paddle(paddleDimensions.x, paddleDimensions.y, startPos);
+    // long but thin Player
+    const PlayerDimensions = new Vector2d(20, 150);
+    startPos.y -= Math.floor(PlayerDimensions.y / 2);
+    startPos.x -= Math.floor(PlayerDimensions.x / 2);
+    const newPlayer = new Player(PlayerDimensions.x, PlayerDimensions.y, startPos, new Vector2d(0, 10), name);
     this.players.push(newPlayer);
     this.renderCommand.drawables.push(newPlayer);
 

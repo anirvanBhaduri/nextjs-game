@@ -1,18 +1,26 @@
 import { Rectangle } from './rectangle';
-import { WithSpeed, Vector2d, WithDirectionKeys } from './types';
+import { WithSpeed, Vector2d, WithDirectionKeys, WithName } from './types';
 
-export class Paddle extends Rectangle implements WithSpeed, WithDirectionKeys {
+export class Player extends Rectangle implements WithSpeed, WithDirectionKeys, WithName {
+  name: string;
   speed: Vector2d;
   upKey?: string;
   downKey?: string;
   upKeyPressed: boolean;
   downKeyPressed: boolean;
 
-  public constructor(width: number, height: number, pos: Vector2d, speed: Vector2d = new Vector2d(0, 10)) {
+  public constructor(
+    width: number,
+    height: number,
+    pos: Vector2d,
+    speed: Vector2d = new Vector2d(0, 10),
+    name = 'Player'
+  ) {
     super(width, height, pos);
     this.speed = speed;
     this.upKeyPressed = false;
     this.downKeyPressed = false;
+    this.name = name;
   }
 
   public draw(context: CanvasRenderingContext2D) {

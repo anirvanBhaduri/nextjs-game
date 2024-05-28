@@ -1,4 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { LogLevel, GameLogContext } from '../game/game-logger';
+
+const logLevelToColour: {
+  [log in LogLevel]: string;
+} = {
+  debug: 'text-white',
+  info: 'text-sky-400',
+  warn: 'text-yellow-500',
+  error: 'text-red-800',
+};
 
 /**
  * This component will use the game's context to
@@ -8,10 +18,20 @@ import React from 'react';
  *
  */
 const LogPanel: React.FunctionComponent = () => {
+  const { gameLogs } = useContext(GameLogContext);
+
   return (
     <div className="h-fit w-full rounded-lg bg-blue-800 flex flex-col gap-2 p-4">
       <h2>LogPanel</h2>
-      <div className="h-[350px] bg-black">LogContent</div>
+      <ul className="h-[350px] bg-black overflow-auto w-full rounded-md">
+        {gameLogs.map((logLine) => {
+          return (
+            <li key={logLine.id} className={`w-full px-1 flex align-left ${logLevelToColour[logLine.level]}`}>
+              [{logLine.level}] {logLine.msg}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
