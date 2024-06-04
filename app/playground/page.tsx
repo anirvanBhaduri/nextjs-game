@@ -13,9 +13,9 @@ export default function PlayGround() {
   const [gameLogs, setGameLogs] = useState<LogMsg[]>([]);
 
   return (
-    <main className="z-[-1] flex grow flex-col gap-5 py-4 px-4 md:px-10 lg:px-24">
-      <h1 className="text-2xl font-bold text-center my-5">Ping pong game</h1>
-      <div className="flex flex-col lg:flex-row gap-5">
+    <main className="flex grow flex-col gap-5 py-4 px-4 md:px-10 lg:px-24">
+      <h1 className="z-[-1] text-2xl font-bold text-center my-5">Ping pong game</h1>
+      <div className="z-[-1] flex flex-col lg:flex-row gap-5">
         <GameLogContext.Provider value={{ gameLogs, setGameLogs: (log) => setGameLogs((logs) => [...logs, log]) }}>
           <div className="w-full lg:w-2/3 flex-auto text-center">
             <GamePanel />

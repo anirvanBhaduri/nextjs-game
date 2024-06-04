@@ -5,7 +5,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Senior Software Engineer',
     children: (
       <>
-        <p className="text-xs font-bold mb-3">Datch Inc., New Zealand</p>
+        <a href="https://www.datch.io/" target="_blank" className="text-xs font-bold mb-3">
+          Datch Inc., New Zealand
+        </a>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">
             Mentored team members, resulting in a significant improvement in the quality of their contributions.
@@ -37,7 +39,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Intermediate Software Engineer',
     children: (
       <>
-        <p className="text-xs font-bold mb-3">JustEatTakeaway.com, Germany</p>
+        <a href="https://www.justeattakeaway.com/" target="_blank" className="text-xs font-bold mb-3">
+          JustEatTakeaway.com, Germany
+        </a>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">Architected and implemented scalable, secure Zendesk Apps infrastructure.</li>
           <li className="list-disc">Automated service deployments with Kubernetes, Helm charts, and GitLab CI.</li>
@@ -66,7 +70,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Junior/Intermediate Software Engineer',
     children: (
       <>
-        <p className="text-xs font-bold mb-3">ezyVet, New Zealand</p>
+        <a href="https://www.ezyvet.com/" target="_blank" className="text-xs font-bold mb-3">
+          ezyVet, New Zealand
+        </a>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">
             Designed and implemented the ezyVet external API for third-party integrations (Node.js, Lumen/Laravel, AWS
@@ -98,7 +104,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Junior Software Engineer',
     children: (
       <>
-        <p className="text-xs font-bold mb-3">Gentrack, New Zealand</p>
+        <a href="https://gentrack.com/" target="_blank" className="text-xs font-bold mb-3">
+          Gentrack, New Zealand
+        </a>
       </>
     ),
     toTime: new Date('2016 July'),
