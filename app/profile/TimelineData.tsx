@@ -1,4 +1,4 @@
-import { TimelineCardProps } from './TimelineCard';
+import { TimelineCardProps } from '@/components/timeline/TimelineCard';
 
 export const timelineData: TimelineCardProps[] = [
   {

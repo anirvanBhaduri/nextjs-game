@@ -18,6 +18,9 @@ const Nav: React.FunctionComponent = () => {
           <li className="transition-scale duration-200 ease-in-out hover:scale-125">
             <Link href={'/playground'}>Playground</Link>
           </li>
+          <li className="transition-scale duration-200 ease-in-out hover:scale-125">
+            <Link href={'/blog'}>Blog</Link>
+          </li>
         </ul>
       </section>
     </nav>

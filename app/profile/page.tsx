@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
-import Timeline from './components/Timeline';
+import Timeline from '@/components/timeline/Timeline';
+import { timelineData } from './TimelineData';
 
 const Profile: React.FunctionComponent = () => {
   return (
@@ -15,7 +16,7 @@ const Profile: React.FunctionComponent = () => {
         <FaQuoteRight className="absolute text-xs -bottom-3 -right-3 md:-bottom-6 md:-right-6 lg:-bottom-6 lg:-right-6"></FaQuoteRight>
       </section>
       <section className="w-full grow">
-        <Timeline />
+        <Timeline timelineData={timelineData} />
       </section>
     </main>
   );
