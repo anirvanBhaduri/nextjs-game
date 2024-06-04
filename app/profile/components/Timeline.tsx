@@ -1,32 +1,6 @@
 import React from 'react';
-import TimelineCard, { TimelineCardProps } from './TimelineCard';
-
-export const timelineData: TimelineCardProps[] = [
-  {
-    title: 'Datch Inc.',
-    children: <div className="text-sm">Some stuff for datch</div>,
-    fromTime: new Date(),
-    toTime: new Date(),
-  },
-  {
-    title: 'JustEatTakeaway.com',
-    children: <div className="text-sm">Some stuff for JustEatTakeaway.com</div>,
-    fromTime: new Date(),
-    toTime: new Date(),
-  },
-  {
-    title: 'JustEatTakeaway.com',
-    children: <div className="text-sm">Some stuff for JustEatTakeaway.com</div>,
-    fromTime: new Date(),
-    toTime: new Date(),
-  },
-  {
-    title: 'JustEatTakeaway.com',
-    children: <div className="text-sm">Some stuff for JustEatTakeaway.com</div>,
-    fromTime: new Date(),
-    toTime: new Date(),
-  },
-];
+import TimelineCard from './TimelineCard';
+import { timelineData } from './TimelineData';
 
 const Timeline: React.FunctionComponent = () => {
   const timelineCards = timelineData.map((data, index) => {
@@ -44,7 +18,7 @@ const Timeline: React.FunctionComponent = () => {
         <div className="hidden md:grid lg:grid col-span-10 md:col-span-5 lg:col-span-5 mb-0">
           {isEven && <TimelineCard {...data} />}
         </div>
-        <div className="col-span-10 md:hidden lg:hidden mb-4 last:mb-0">{<TimelineCard {...data} />}</div>
+        <div className="col-span-10 md:hidden lg:hidden mb-8 last:mb-0">{<TimelineCard {...data} />}</div>
       </React.Fragment>
     );
   });

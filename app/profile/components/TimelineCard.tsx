@@ -7,18 +7,18 @@ export type TimelineCardProps = {
 } & React.PropsWithChildren;
 
 const fromDateTimeToString = (dateTime: Date): string => {
-  return '2024';
+  return dateTime.toLocaleString('en-US', { month: 'short', year: 'numeric' });
 };
 
 const TimelineCard: React.FunctionComponent<TimelineCardProps> = ({ fromTime, toTime, title, children }) => {
   return (
     <section className="w-full h-full rounded-lg p-4 bg-zinc-900 flex flex-col">
       <div className="flex flex-row">
-        <p className="text-sm">{fromDateTimeToString(toTime)}</p>
-        {/* <p>{fromDateTimeToString(fromTime)}</p> */}
+        <p className="text-sm text-pink-600">{fromDateTimeToString(toTime)}</p>
       </div>
       <h1 className="my-3 text-xl text-sky-400">{title}</h1>
       {children}
+      <p className="text-sm mt-5 text-pink-700">{fromDateTimeToString(fromTime)}</p>
     </section>
   );
 };
