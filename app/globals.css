@@ -30,3 +30,7 @@ body {
 .keyboard-key {
   font-family: monospace;
 }
+
+.profile-image {
+  background-image: url(/profile-2.jpg);
+}
