@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { TimelineCardProps } from '@/components/timeline/TimelineCard';
 
 export const timelineData: TimelineCardProps[] = [
@@ -5,9 +6,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Senior Software Engineer',
     children: (
       <>
-        <a href="https://www.datch.io/" target="_blank" className="text-xs font-bold mb-3">
+        <Link passHref={true} href="https://www.datch.io/" target="_blank" className="text-xs font-bold mb-3">
           Datch Inc., New Zealand
-        </a>
+        </Link>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">
             Mentored team members, resulting in a significant improvement in the quality of their contributions.
@@ -39,9 +40,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Intermediate Software Engineer',
     children: (
       <>
-        <a href="https://www.justeattakeaway.com/" target="_blank" className="text-xs font-bold mb-3">
+        <Link passHref={true} href="https://www.lieferando.de/" target="_blank" className="text-xs font-bold mb-3">
           JustEatTakeaway.com, Germany
-        </a>
+        </Link>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">Architected and implemented scalable, secure Zendesk Apps infrastructure.</li>
           <li className="list-disc">Automated service deployments with Kubernetes, Helm charts, and GitLab CI.</li>
@@ -70,9 +71,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Junior/Intermediate Software Engineer',
     children: (
       <>
-        <a href="https://www.ezyvet.com/" target="_blank" className="text-xs font-bold mb-3">
+        <Link passHref={true} href="https://www.ezyvet.com/" target="_blank" className="text-xs font-bold mb-3">
           ezyVet, New Zealand
-        </a>
+        </Link>
         <ul className="text-sm pl-4 leading-6 text-wrap">
           <li className="list-disc">
             Designed and implemented the ezyVet external API for third-party integrations (Node.js, Lumen/Laravel, AWS
@@ -104,9 +105,9 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Junior Software Engineer',
     children: (
       <>
-        <a href="https://gentrack.com/" target="_blank" className="text-xs font-bold mb-3">
+        <Link passHref={true} href="https://gentrack.com/" target="_blank" className="text-xs font-bold mb-3">
           Gentrack, New Zealand
-        </a>
+        </Link>
       </>
     ),
     toTime: new Date('2016 July'),
