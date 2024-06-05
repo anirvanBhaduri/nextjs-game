@@ -23,6 +23,7 @@ export const timelineData: TimelineCardProps[] = [
             className="py-2 w-auto h-auto"
             width={500}
             height={200}
+            priority
             src="/blog-post-1.png"
             alt="blog post 1 image"
           />
