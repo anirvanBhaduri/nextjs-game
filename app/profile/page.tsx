@@ -15,7 +15,7 @@ const Profile: React.FunctionComponent = () => {
         pushing boundaries is the key to high performing teams.
         <FaQuoteRight className="absolute text-xs -bottom-3 -right-3 md:-bottom-6 md:-right-6 lg:-bottom-6 lg:-right-6"></FaQuoteRight>
       </section>
-      <section className="w-full grow">
+      <section className="w-full grow z-[-1]">
         <Timeline timelineData={timelineData} />
       </section>
     </main>
