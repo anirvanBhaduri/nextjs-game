@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export type WithLogger = {
   logger: Logger;
@@ -64,3 +64,5 @@ export const GameLogContext = createContext<{ gameLogs: LogMsg[]; setGameLogs?: 
   gameLogs: [],
   setGameLogs: undefined,
 });
+
+export const useGameContext = () => useContext(GameLogContext);

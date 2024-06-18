@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { LogLevel, GameLogContext } from '../game/game-logger';
+import React, { useEffect, useRef } from 'react';
+import { LogLevel, useGameContext } from '../game/game-logger';
 
 const logLevelToColour: {
   [log in LogLevel]: string;
@@ -18,7 +18,7 @@ const logLevelToColour: {
  *
  */
 const LogPanel: React.FunctionComponent = () => {
-  const { gameLogs } = useContext(GameLogContext);
+  const { gameLogs } = useGameContext();
   const logsRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {

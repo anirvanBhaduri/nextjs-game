@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import use2dRenderingEngine from '../hooks/canvas';
 import { RenderInitMethod, RenderLifeCycleMethod } from '../hooks/canvas';
 import { GameEngine } from '../game/game-engine';
 import { PhysicsEngine } from '../game/physics-engine';
 import { Rectangle } from '../game/objects/rectangle';
 import { Vector2d } from '../game/objects/types';
-import { GameLogContext, GameLogger, Logger } from '../game/game-logger';
+import { GameLogger, Logger, useGameContext } from '../game/game-logger';
 
 export interface GamePanelProps {}
 
@@ -63,12 +63,17 @@ const setupGame = (logger: Logger): GameArtifacts => {
  * @returns
  */
 const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
-  const { setGameLogs } = useContext(GameLogContext);
-  const gameArtifacts = useRef(setupGame(new GameLogger([], setGameLogs))).current;
+  const { setGameLogs } = useGameContext();
+  const gameArtifacts = useRef<GameArtifacts | null>(null);
 
-  const canvasRef = use2dRenderingEngine(gameArtifacts.gameEngine.getRenderCommand(), {
-    init: gameArtifacts.gameInit,
-    beforeRender: gameArtifacts.gameBeforeRender,
+  if (!gameArtifacts.current) {
+    gameArtifacts.current = setupGame(new GameLogger([], setGameLogs));
+  }
+
+  const canvasRef = use2dRenderingEngine(gameArtifacts.current.gameEngine.getRenderCommand(), {
+    init: gameArtifacts.current.gameInit,
+    beforeRender: gameArtifacts.current.gameBeforeRender,
+    onDestroy: gameArtifacts.current.gameOnDestroy,
   });
 
   return (
@@ -76,7 +81,7 @@ const GamePanel: React.FunctionComponent<GamePanelProps> = () => {
       <h2 className="text-sm">GamePanel</h2>
       <canvas className="h-[350px] w-full bg-black rounded-md" ref={canvasRef} />
       <div className="z-1 absolute top-20 left-0 right-0 mx-auto w-24">
-        {gameArtifacts.gameEngine.isPaused() && <div className="text-center font-bold">Paused</div>}
+        {gameArtifacts.current.gameEngine.isPaused() && <div className="text-center font-bold">Paused</div>}
       </div>
     </div>
   );
