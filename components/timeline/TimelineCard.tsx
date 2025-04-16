@@ -1,10 +1,10 @@
 import React from 'react';
 
-export type TimelineCardProps = {
+export type TimelineCardProps = React.PropsWithChildren<{
   fromTime?: Date;
   toTime?: Date;
   title: string;
-} & React.PropsWithChildren;
+}>;
 
 const fromDateTimeToString = (dateTime: Date): string => {
   return dateTime.toLocaleString('en-US', { month: 'short', year: 'numeric' });

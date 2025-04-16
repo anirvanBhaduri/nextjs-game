@@ -8,7 +8,7 @@ const Profile: React.FunctionComponent = () => {
     <main className="h-full w-full px-5 lg:px-24 my-20 flex flex-col gap-20 items-center">
       <section className="text-md max-w-96 md:max-w-xl lg:max-w-2xl text-zinc-300 text-justify relative">
         <FaQuoteLeft className="absolute text-xs -left-3 -top-3 md:-left-6 md:-top-6 lg:-left-6 lg:-top-6"></FaQuoteLeft>
-        I am a Software Engineering professional with 8 years of experience in the industry, mainly in fullstack
+        I am a Software Engineering professional with 9 years of experience in the industry, mainly in fullstack
         development, with a strong foundation in engineering and software development principles. I enjoy problem
         solving and take pride in developing innovative and elegant solutions that are robust and of a very high
         quality. I love working in a team environment and believe continuous improvement, mentorship and constantly

@@ -4,6 +4,20 @@ import { TimelineCardProps } from '@/components/timeline/TimelineCard';
 
 export const timelineData: TimelineCardProps[] = [
   {
+    title: 'Another user/supporter of vim!',
+    children: (
+      <>
+        <p className="text-sm">
+          {'Below is a link to a twitch streamer I often visit to get some insights on the world of programming.'}
+        </p>
+        <Link passHref={true} className="text-sm my-4" href="https://www.twitch.tv/theprimeagen" target="_blank">
+          <span className="italic">https://www.twitch.tv/theprimeagen</span>
+        </Link>
+      </>
+    ),
+    toTime: new Date('2025/04/16'),
+  },
+  {
     title: 'Article from Datch back when I started there',
     children: (
       <>

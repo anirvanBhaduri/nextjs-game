@@ -6,6 +6,25 @@ export const timelineData: TimelineCardProps[] = [
     title: 'Senior Software Engineer',
     children: (
       <>
+        <Link passHref={true} href="https://www.lieferando.de/" target="_blank" className="text-xs font-bold mb-3">
+          JustEatTakeaway.com, Germany
+        </Link>
+        <ul className="text-sm pl-4 leading-6 text-wrap">
+          <li className="list-disc">Improved DB performance through optimized queries and indexing.</li>
+          <li className="list-disc">Mentored team on design principles via practical examples.</li>
+          <li className="list-disc">Led code reviews to elevate code quality and team skills.</li>
+          <li className="list-disc">Established Technical Governance to manage tech debt.</li>
+          <li className="list-disc">Streamlined deployments with a fail-fast strategy.</li>
+        </ul>
+      </>
+    ),
+    toTime: new Date('2025 Apr'),
+    fromTime: new Date('2024 Nov'),
+  },
+  {
+    title: 'Senior Software Engineer',
+    children: (
+      <>
         <Link passHref={true} href="https://www.datch.io/" target="_blank" className="text-xs font-bold mb-3">
           Datch Inc., New Zealand
         </Link>

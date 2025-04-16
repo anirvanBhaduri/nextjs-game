@@ -19,7 +19,13 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({ timelineData, altern
           </div>
         )}
         <div className="col-span-1">
-          <div className="w-[3px] mx-auto bg-zinc-200 h-full relative before:absolute before:-top-0 before:left-1/2 before:h-[15px] before:w-[15px] before:-translate-x-2/4 before:rounded-full before:content-[''] before:bg-zinc-200 before:z-1"></div>
+          <div
+            className="
+            w-[3px] mx-auto bg-zinc-200 h-full relative
+            before:absolute before:-top-0 before:left-1/2
+            before:h-[15px] before:w-[15px] before:-translate-x-2/4
+            before:rounded-full before:content-[''] before:bg-zinc-200 before:z-1"
+          ></div>
         </div>
         {alternatingDisplay && (
           <div className="hidden md:grid lg:grid col-span-10 md:col-span-5 lg:col-span-5 mb-0">
